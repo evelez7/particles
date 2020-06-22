@@ -1,8 +1,11 @@
+#define WITHOUT_NUMPY
+#include "matplotlibcpp.h"
 #include "w.h"
 #include "util.h"
 #include <cmath>
 #include <vector>
 #include <memory>
+#include <string>
 
 // forward declarations
 double I_PG(int, double);
@@ -12,12 +15,17 @@ void interpolate(int);
 std::shared_ptr<std::vector<double>> evaluate_z();
 double x_k(double, double, int);
 double x(double, double);
+void graph(std::vector<double> const&, std::vector<double> const&, double (*)(double), std::string);
 
 // global vars
 int N_array[2] = {32, 64};
 double (*w_pointers[4])(double) = {w_2, w_4};
 int dimensions = 1;
 
+namespace plt = matplotlibcpp;
+
+// windows: -I/usr/include/python2.7 -lpython2.7
+// mac: 
 int main(int argc, char** argv) {
     for (int i = 0; i < 2; ++i) {
         interpolate(i);
@@ -30,13 +38,16 @@ void interpolate(int option) {
         for (auto w_script : w_pointers) {
             for (auto N : N_array) {
                 double h = 1.0 / N;
-                
+                std::vector<double> x, y; 
                 for (int k = 0; k < N; ++k) {
                     // double alpha = 
                     // double x_value = x()
 
-                    I_pg_one(k, h, w_script);
+                    auto interpolated_value = I_pg_one(k, h, w_script);
+                    x.push_back(interpolated_value);
+                    y.push_back(k);
                 }
+                graph(x, y, w_script, std::to_string(N));
             }
         }
     } else if (option == 2) {
@@ -80,4 +91,10 @@ std::shared_ptr<std::vector<double>> evaluate_z() {
         // z->push_back()
     }
     return z;
+}
+
+void graph(std::vector<double> const& x, std::vector<double> const& y, double (*w_script)(double), std::string N) {
+    plt::plot(x, y);
+    plt::title(get_we_name(w_script) + " N=" + N);
+    plt::show();
 }
