@@ -11,11 +11,11 @@
 // forward declarations
 std::shared_ptr<std::vector<double>> evaluate_z(double, double);
 
+double I_pg(int, double, double, double (*)(double), int, int);
 double I_pg(int, double, double, double (*)(double), int, int, int, int);
 
-void interpolate(double, int, double (*)(double), int, int start_loop = 0, int end_loop = 32);
-
-std::shared_ptr<std::vector<double>> evaluate_z();
+void interpolate(double, int, double (*)(double), int, int, int);
+void interpolate(double, int, double (*)(double), int);
 
 double x(double, double);
 
@@ -43,17 +43,34 @@ int main(int argc, char **argv) {
         char *z;
         int start = strtol(argv[2], &l, 10);
         int end = strtol(argv[3], &z, 10);
-    }
-    for (auto w_script : w_pointers) {
-        for (auto N : N_array) {
-            double h = 1.0 / static_cast<double>(N);
-            if (test_case == 1) {
-                for (auto time : t_array_one) {
-                    interpolate(time, N, w_script, test_case);
+
+        for (auto w_script : w_pointers) {
+            for (auto N : N_array) {
+                double h = 1.0 / static_cast<double>(N);
+                if (test_case == 1) {
+                    for (auto time : t_array_one) {
+                        interpolate(time, N, w_script, test_case, start, end);
+                    }
+                } else if (test_case == 2) {
+                    for (auto time : t_array_two) {
+                        interpolate(time, N, w_script, test_case, start, end);
+                    }
                 }
-            } else if (test_case == 2) {
-                for (auto time : t_array_two) {
-                    interpolate(time, N, w_script, test_case);
+            }
+        }
+    } else {
+
+        for (auto w_script : w_pointers) {
+            for (auto N : N_array) {
+                double h = 1.0 / static_cast<double>(N);
+                if (test_case == 1) {
+                    for (auto time : t_array_one) {
+                        interpolate(time, N, w_script, test_case);
+                    }
+                } else if (test_case == 2) {
+                    for (auto time : t_array_two) {
+                        interpolate(time, N, w_script, test_case);
+                    }
                 }
             }
         }
@@ -75,12 +92,36 @@ void interpolate(double t, int N, double (*w_script)(double), int test_case, int
 
 void interpolate(double t, int N, double (*w_script)(double), int test_case) {
     double h = 1.0/static_cast<double>(N);
+    std::vector<double> x_axis, y_axis;
     for (int k = 0; k < N; ++k) {
         double interpolated_value = I_pg(k, h, t, w_script, N, test_case);
+        x_axis.push_back(k);
+        y_axis.push_back(interpolated_value);
     }
+    graph(x_axis, y_axis, w_script, std::to_string(N), std::to_string(t));
 }
 
 double I_pg(int k, double h, double t, double (*w_script)(double), int N, int test_case) {
+    auto r_double = get_r_double(w_script);
+    double r_low = std::get<0>(r_double);
+    double r_high = std::get<1>(r_double);
+
+    double sum = 0;
+    for (int k_i = k + r_low; k_i < k+r_high; ++k_i) {
+        double alpha = static_cast<double>(k_i) * h;
+        double x_bar = static_cast<double>(k_i) * h;
+        double x_k = x(alpha, t);
+        double w_value = w(x_bar - x_k, h, w_script);
+
+        double f_value;
+        if (test_case ==1) {
+            f_value = f_one(k_i * h, alpha);
+        } else {
+            f_value = f_two(k_i * h, alpha);
+        }
+        sum += f_value * w_value;
+    }
+    return sum;
 }
 
 // the first problem where t is from 0-0.05
@@ -114,14 +155,6 @@ double I_pg(int k, double h, double t, double (*w_script)(double), int N, int te
 // x(alpha, 0) = alpha
 double x(double alpha, double t) {
     return alpha - (t * sin(2.0 * M_PI * alpha));
-}
-
-std::shared_ptr<std::vector<double>> evaluate_z() {
-    auto z = std::make_shared<std::vector<double>>();
-    for (int i = 0; i < dimensions; ++i) {
-        // z->push_back()
-    }
-    return z;
 }
 
 void graph(std::vector<double> const &x, std::vector<double> const &y, double (*w_script)(double), std::string N, std::string time) {
