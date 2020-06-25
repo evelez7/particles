@@ -10,7 +10,8 @@ double first_order_moment(std::vector<double> z_vector);
 
 std::tuple<int, int> get_r_double(double (*)(double));
 
-double f(double);
+double f_one(double, double);
+double f_two(double, double);
 
 void test_w();
 
