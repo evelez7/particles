@@ -8,7 +8,7 @@
 std::map<double (*)(double), std::tuple<int, int>> r_map = {
     {w_2, std::make_tuple(0, 1)},
     {w_3, std::make_tuple(-1, 2)},
-    {w_4, std::make_tuple(-1, 2)},
+    {w_4, std::make_tuple(0, 1)},
     {w_6, std::make_tuple(-2, 3)}
 };
 
@@ -24,19 +24,11 @@ std::tuple<int, int> get_r_double(double (*w_script)(double)) {
     return r_map[w_script];
 }
 
-double f_one(double x, double alpha) {
-    // return sin(2.0 * M_PI * x);
-    // return     // return 1;
-    // double val = cos(2.0 * M_PI * x);
-    // if (val == alpha) {
-    //     return 1.0;
-    // }
-    // return val;
+double f_one(double x) {
     return 1;
 }
 
-double f_two(double x, double alpha) {
-    double val = cos(2.0 * M_PI * x);
+double f_two(double x) {
     // if (x == alpha) {
         if (abs(x - 0.5) < 0.25) {
             return 1.0;

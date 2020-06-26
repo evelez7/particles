@@ -42,7 +42,7 @@ double w_4(double x) {
         return 1.0 - ( (11.0 * abs_x) / 6.0) + pow(abs_x, 2.0) - (pow(abs_x, 3.0) / 6.0);
     } 
 
-    return 0;
+    return 0.0;
 }
 
 double w_6(double x) {
