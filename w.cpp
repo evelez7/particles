@@ -59,16 +59,16 @@ double w_6(double x) {
     return 0;
 }
 
-double w(std::shared_ptr<std::vector<double>> z, double h, double (*w_script)(double)) {
+double w(std::shared_ptr<std::vector<double>> z, double h_g, double (*w_script)(double)) {
     double product = 1.0;
     for (int i = 0; i < z->size(); i++) {
-        product*=w_script((z->at(i))/h);
+        product*=w_script((z->at(i))/h_g);
     }
-    return product;
+    return product / h_g;
 }
 
-double w(double z, double h, double (*w_script)(double)) {
-    return w_script(z/h);
+double w(double z, double h_g, double (*w_script)(double)) {
+    return w_script(z/h_g) / h_g;
 }
 
 std::string get_w_name(double (*w_script)(double)) {
