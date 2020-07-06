@@ -93,7 +93,7 @@ double I_pg(int k, double h, double t, double (*w_script)(double), int N, int te
             } else {
                 // f_value = f_two(x_bar, alpha);
                 // f_value = f_two(alpha, alpha); 
-                f_value = f_two(x_k_val);
+                f_value = f_two(k_i * h);
             }
             sum += f_value * w_value;
         }
