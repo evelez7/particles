@@ -11,7 +11,7 @@
 // forward declarations
 std::shared_ptr<std::vector<double>> evaluate_z(double, double);
 
-double I_pg(int, double, double, double, double, double (*)(double), int, int);
+double I_pg(int, double, double, double, double (*)(double), int, int);
 
 void interpolate(double, int, double (*)(double), int);
 
@@ -57,12 +57,12 @@ int main(int argc, char **argv) {
 }
 
 void interpolate(double t, int N, double (*w_script)(double), int test_case) {
-    double h_d = 1.0 / static_cast<double>(N);
-    double h_g =  h_d * wrong_scaling;
-    double h = h_g * wrong_scaling; 
     std::vector<double> x_axis, y_axis, real;
+    double h = 1.0/N;
+    double h_g = h*2.0;
+
     for (int k = 0; k < N; ++k) {
-        double interpolated_value = I_pg(k, h, h_g, h_d, t, w_script, N, test_case);
+        double interpolated_value = I_pg(k, h, h_g, t, w_script, N, test_case);
         x_axis.push_back(k);
         y_axis.push_back(interpolated_value);
         real.push_back(solution(f_pointers[test_case], static_cast<double>(k) * h, t));
@@ -76,7 +76,7 @@ void interpolate(double t, int N, double (*w_script)(double), int test_case) {
 
 // n = 128
 // scale back time by a factor of 10, up to 0.00025
-double I_pg(int k, double h, double h_g, double h_d, double t, double (*w_script)(double), int N, int test_case) {
+double I_pg(int k, double h, double h_g, double t, double (*w_script)(double), int N, int test_case) {
     auto r_double = get_r_double(w_script);
     double r_low = std::get<0>(r_double);
     double r_high = std::get<1>(r_double);
@@ -92,11 +92,11 @@ double I_pg(int k, double h, double h_g, double h_d, double t, double (*w_script
 
             double f_value;
             if (test_case == 0) {
-                f_value = f_one(k_i * h) * h_d;
+                f_value = f_one(k_i * h) * h;
             } else {
                 // f_value = f_two(x_bar, alpha);
                 // f_value = f_two(alpha, alpha); 
-                f_value = f_two(x_k_val) * h_d;
+                f_value = f_two(x_k_val * h) * h;
             }
             sum += f_value * w_value;
         }
