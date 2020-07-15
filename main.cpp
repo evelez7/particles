@@ -3,6 +3,7 @@
 #include "util.h"
 #include "w.h"
 #include <cmath>
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -12,9 +13,7 @@
 std::shared_ptr<std::vector<double>> evaluate_z(double, double);
 
 double I_pg(int, double, double, double, double (*)(double), int, int);
-
 void interpolate(double, int, double (*)(double), int);
-
 double solution(double (*)(double), double, double);
 double x(double, double);
 double x_k(double, int, double);
@@ -36,6 +35,8 @@ namespace plt = matplotlibcpp;
 
 // windows: -I/usr/include/python2.7 -lpython2.7
 // mac: -I/System/Library/Framework/Python.framework/Versions/2.7/include/python2.7 -lpython2.7
+// argument == 0 executes the program for time array one
+// argument == 1 executes the program time array two
 int main(int argc, char **argv) {
     char *p;
     int test_case = strtol(argv[1], &p, 10);
@@ -56,10 +57,25 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+void write_to_file(std::vector<double> const &N_values, std::vector<double> const &interpolated_values, std::vector<double> const &real_values, std::string const& W_name, double const& time, int const& test_case) {
+    std::ofstream output_file("/Users/evelez/code/lbl/particles/output/" + std::to_string(test_case)  + "/" + W_name + "-" + std::to_string(time) + "-" + std::to_string(N_values.size()) + ".txt");
+    if (N_values.size() != interpolated_values.size() || N_values.size() != real_values.size()) {
+        std::cout << "Vectors not same size when writing to file" << std::endl;
+    }
+    if (output_file.is_open()) {
+        for (int i = 0; i < N_values.size(); ++i) {
+            output_file << N_values.at(i) << "," << interpolated_values.at(i) << "," << real_values.at(i);
+            output_file << "\n";
+        }    
+        output_file.flush();
+        output_file.close();
+    }
+}
+
 void interpolate(double t, int N, double (*w_script)(double), int test_case) {
     std::vector<double> x_axis, y_axis, real;
-    double h = 1.0/N;
-    double h_g = h*2.0;
+    double h = 1.0 / N;
+    double h_g = h * 2.0;
 
     for (int k = 0; k < N; ++k) {
         double interpolated_value = I_pg(k, h, h_g, t, w_script, N, test_case);
@@ -72,6 +88,7 @@ void interpolate(double t, int N, double (*w_script)(double), int test_case) {
     plt::title(get_w_name(w_script) + " N=" + std::to_string(N) + " t=" + std::to_string(t));
     plt::legend();
     plt::show();
+//    write_to_file(x_axis, y_axis, real, get_w_name(w_script), t, test_case);
 }
 
 // n = 128
@@ -92,11 +109,11 @@ double I_pg(int k, double h, double h_g, double t, double (*w_script)(double), i
 
             double f_value;
             if (test_case == 0) {
-                f_value = f_one(k_i * h) * h;
+                f_value = f_one(k_i * h) * pow(h_g, 2.0);
             } else {
                 // f_value = f_two(x_bar, alpha);
-                // f_value = f_two(alpha, alpha); 
-                f_value = f_two(x_k_val * h) * h;
+                // f_value = f_two(alpha, alpha);
+                f_value = f_two(k_i * h) * pow(h, 2.0);
             }
             sum += f_value * w_value;
         }
@@ -117,7 +134,7 @@ double x(double alpha, double t) {
 }
 
 void graph(std::vector<double> const &x, std::vector<double> const &y, double (*w_script)(double), std::string N, std::string time) {
-   plt::plot(x, y);
-   plt::title(get_w_name(w_script) + " N=" + N + " t=" + time);
-   plt::show();
+    plt::plot(x, y);
+    plt::title(get_w_name(w_script) + " N=" + N + " t=" + time);
+    plt::show();
 }

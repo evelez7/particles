@@ -64,11 +64,11 @@ double w(std::shared_ptr<std::vector<double>> z, double h_g, double (*w_script)(
     for (int i = 0; i < z->size(); i++) {
         product*=w_script((z->at(i))/h_g);
     }
-    return product / h_g;
+    return product / pow(h_g, 2.0);
 }
 
 double w(double z, double h_g, double (*w_script)(double)) {
-    return w_script(z/h_g) / h_g;
+    return w_script(z/h_g) / pow(h_g,1.0) ;
 }
 
 std::string get_w_name(double (*w_script)(double)) {
