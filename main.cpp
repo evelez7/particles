@@ -36,7 +36,7 @@ int main(int argc, char **argv)
   {
     double h = 1./static_cast<double>(N);
     std::vector<double> h_vals, errors;
-    for (int i = -16; i==0; ++i)
+    for (int i = -16; i<0; ++i)
     {
       double c = pow(10., i);
       errors.push_back(eval(c, N, h, w_pointers[0], 0));
@@ -51,7 +51,7 @@ double eval(double c, int N, double h, double (*w_script)(double), int test_case
 {
   std::vector<double> x_axis, y_axis, real;
   double max = 0;
-  for (int k = 0; k < N; ++k)
+  for (int k = (-N/2) + 4; k < (N/2) - 4; ++k)
   {
     double interpolated_value = I_pg(k, h, c, w_script, N, test_case);
     double exact_value = exact(f_pointers[test_case], static_cast<double>(k) * h, c);
@@ -101,9 +101,10 @@ double I_pg(int k, double h, double t, double (*w_script)(double), int N, int te
   return sum;
 }
 
-double exact(double (*f)(double), double alpha_x, double t)
+double exact(double (*f)(double), double x_alpha, double c)
 {
-  return (f(alpha_x) / (1 - (2 * M_PI * t * cos(2 * M_PI * alpha_x))));
+  // return (f(alpha_x) / (1 - (2 * M_PI * c * cos(2 * M_PI * alpha_x))));
+  return f(x_alpha/(1+c))/(1+c);
 }
 
 // the Lagrangian mapping
