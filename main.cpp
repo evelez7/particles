@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <array>
 
 // forward declarations
 std::shared_ptr<std::vector<double>> evaluate_z(double, double);
@@ -21,7 +22,7 @@ void graph(std::vector<double> const &, std::vector<double> const &, double (*)(
 // END forward declarations
 
 // global vars
-int N_array[6] = {16, 32, 64, 128, 256, 512};
+std::array<int, 6> N_array = {{16, 32, 64, 128, 256, 512}};
 double (*f_pointers[2])(double) = {f_one, f_two};
 double (*w_pointers[2])(double) = {w_2, w_4};
 int dimensions = 1;
@@ -32,15 +33,26 @@ int dimensions = 1;
 int main(int argc, char **argv)
 {
   char *p;
-  for (auto N : N_array)
+  std::array<int, N_array.size()> h_array;
+  for (int i=0; i < h_array.size(); ++i)
+    h_array[i] = 1./static_cast<double>(N_array[i]);
+
+  std::vector<double> x_axis, y_axis;
+  for (int n = -16; n<0; ++n)
   {
-    double h = 1./static_cast<double>(N);
-    std::vector<double> h_vals, errors;
-    for (int i = -16; i<0; ++i)
+    double c = pow(10., n);
+    for (auto N : N_array)
     {
-      double c = pow(10., i);
-      errors.push_back(eval(c, N, h, w_pointers[0], 0));
-      h_vals.push_back(h);
+      for (auto h : h_array)
+      {
+        double error = eval(c, N, h, w_pointers[0], 0);
+        y_axis.push_back(error);
+        x_axis.push_back(h);
+      }
+      // plt::named_plot("error", x_axis, y_axis);
+      // plt::title("h: " + std::to_string(h) + " c: " + std::to_string(c) + " N: " + std::to_string(N));
+      // plt::legend();
+      // plt::show();
     }
   }
 
@@ -60,11 +72,7 @@ double eval(double c, int N, double h, double (*w_script)(double), int test_case
       max = difference;
   }
   return max;
-  // plt::named_plot("interpolation", x_axis, y_axis);
   // plt::named_plot("solution", x_axis, real);
-  // plt::title(get_w_name(w_script) + " N=" + std::to_string(N) + " t=" + std::to_string(t));
-  // plt::legend();
-  // plt::show();
 }
 
 // n = 128
