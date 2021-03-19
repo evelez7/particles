@@ -1,3 +1,4 @@
+#include "matplotlibcpp.h"
 #include "util.h"
 #include "w.h"
 #include <cmath>
@@ -21,6 +22,7 @@ double x_k(double, int, double);
 void graph(std::vector<double> const &, std::vector<double> const &, double (*)(double), std::string, std::string);
 // END forward declarations
 
+namespace plt = matplotlibcpp;
 // global vars
 std::array<int, 6> N_array = {{16, 32, 64, 128, 256, 512}};
 double (*f_pointers[2])(double) = {f_one, f_two};
@@ -38,21 +40,22 @@ int main(int argc, char **argv)
     h_array[i] = 1./static_cast<double>(N_array[i]);
 
   std::vector<double> x_axis, y_axis;
-  for (int n = -16; n<0; ++n)
+  for (int n = -4; n<0; ++n)
   {
     double c = pow(10., n);
     for (auto N : N_array)
     {
       for (auto h : h_array)
       {
-        double error = eval(c, N, h, w_pointers[0], 0);
+        double error = eval(c, N, h, w_pointers[0], 1);
         y_axis.push_back(error);
+        std::cout << error << std::endl;
         x_axis.push_back(h);
       }
-      // plt::named_plot("error", x_axis, y_axis);
-      // plt::title("h: " + std::to_string(h) + " c: " + std::to_string(c) + " N: " + std::to_string(N));
-      // plt::legend();
-      // plt::show();
+      plt::named_plot("error", x_axis, y_axis);
+      plt::title( " c: " + std::to_string(c) + " N: " + std::to_string(N));
+      plt::legend();
+      plt::show();
     }
   }
 
@@ -68,6 +71,7 @@ double eval(double c, int N, double h, double (*w_script)(double), int test_case
     double interpolated_value = I_pg(k, h, c, w_script, N, test_case);
     double exact_value = exact(f_pointers[test_case], static_cast<double>(k) * h, c);
     double difference = interpolated_value - exact_value;
+    std::cout << "exact: " << exact_value << " diff: " << difference << std::endl;
     if (difference > max)
       max = difference;
   }
