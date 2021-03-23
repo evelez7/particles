@@ -1,4 +1,3 @@
-#include "matplotlibcpp.h"
 #include "util.h"
 #include "w.h"
 #include <cmath>
@@ -23,7 +22,6 @@ double x_k(double, int, double);
 void graph(std::vector<double> const &, std::vector<double> const &, double (*)(double), std::string, std::string);
 // END forward declarations
 
-namespace plt = matplotlibcpp;
 // global vars
 std::array<int, 6> N_array = {{16, 32, 64, 128, 256, 512}};
 double (*f_pointers[2])(double) = {f_one, f_two};
@@ -31,8 +29,6 @@ double (*w_pointers[2])(double) = {w_2, w_4};
 int dimensions = 1;
 // END global vars
 
-// windows: -I/usr/include/python2.7 -lpython2.7
-// mac: -I/System/Library/Framework/Python.framework/Versions/2.7/include/python2.7 -lpython2.7
 int main(int argc, char **argv)
 {
   char *p;
@@ -41,52 +37,26 @@ int main(int argc, char **argv)
     h_array[i] = 1./static_cast<double>(N_array[i]);
 
   std::vector<double> x_axis, y_axis;
-  // for (int n = -4; n<0; ++n)
-  // {
-  //   double c = pow(10., n);
-  //   for (auto N : N_array)
-  //   {
-  //     for (auto h : h_array)
-  //     {
-  //       double error = eval(c, N, h, w_pointers[0], 0);
-  //       y_axis.push_back(error);
-  //       std::cout << error << std::endl;
-  //       x_axis.push_back(h);
-  //     }
-  //     plt::named_plot("error", x_axis, y_axis);
-  //     plt::title( " c: " + std::to_string(c) + " N: " + std::to_string(N));
-  //     plt::legend();
-  //     plt::show();
-  //   }
-  // }
-
-  for (auto N : N_array)
+  std::ofstream output_file;
+  output_file.open("1Derror.curve", std::ios::trunc);
+  for (int n = -10; n<0; ++n)
   {
-    // double h = 1./static_cast<double>(N);
-    double c;
-    for (int n = -4; n<0; ++n)
+    double c = pow(10., n);
+    for (auto N : N_array)
     {
-      c = pow(10., n);
-    for (auto h : h_array)
-    {
+      double h = 1./static_cast<double>(N);
       double error = eval(c, N, h, w_pointers[0], 0);
       y_axis.push_back(error);
-      std::cout << error << std::endl;
       x_axis.push_back(h);
     }
-    }
-    plt::named_plot("error", x_axis, y_axis);
-    plt::title( " c: " + std::to_string(c) + " N: " + std::to_string(N));
-    plt::legend();
-    plt::show();
-    std::ofstream output_file;
-    output_file.open("./output/" + std::to_string(N));
+    output_file << "# c=" + std::to_string(c) << "\n";
     for (int i = 0; i < x_axis.size(); ++i)
-      output_file << x_axis[i] << "," << y_axis[i] << "\n";
-    output_file.close();
+      output_file << x_axis[i] << " " << y_axis[i] << "\n";
     x_axis.clear();
     y_axis.clear();
+    std::cout << "NEW ITERATION" << std::endl;
   }
+  output_file.close();
 
   return 0;
 }
@@ -100,7 +70,7 @@ double eval(double c, int N, double h, double (*w_script)(double), int test_case
     double interpolated_value = I_pg(k, h, c, w_script, N, test_case);
     double exact_value = exact(f_pointers[test_case], static_cast<double>(k) * h, c);
     double difference = interpolated_value - exact_value;
-    std::cout << "exact: " << exact_value << " diff: " << difference << std::endl;
+    std::cout << "interpolated: " <<  interpolated_value << " exact: " << exact_value << " diff: " << difference << std::endl;
     if (difference > max)
       max = difference;
   }
