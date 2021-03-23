@@ -3,6 +3,7 @@
 #include "w.h"
 #include <cmath>
 #include <iostream>
+#include <fstream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -40,23 +41,51 @@ int main(int argc, char **argv)
     h_array[i] = 1./static_cast<double>(N_array[i]);
 
   std::vector<double> x_axis, y_axis;
-  for (int n = -4; n<0; ++n)
+  // for (int n = -4; n<0; ++n)
+  // {
+  //   double c = pow(10., n);
+  //   for (auto N : N_array)
+  //   {
+  //     for (auto h : h_array)
+  //     {
+  //       double error = eval(c, N, h, w_pointers[0], 0);
+  //       y_axis.push_back(error);
+  //       std::cout << error << std::endl;
+  //       x_axis.push_back(h);
+  //     }
+  //     plt::named_plot("error", x_axis, y_axis);
+  //     plt::title( " c: " + std::to_string(c) + " N: " + std::to_string(N));
+  //     plt::legend();
+  //     plt::show();
+  //   }
+  // }
+
+  for (auto N : N_array)
   {
-    double c = pow(10., n);
-    for (auto N : N_array)
+    // double h = 1./static_cast<double>(N);
+    double c;
+    for (int n = -4; n<0; ++n)
     {
-      for (auto h : h_array)
-      {
-        double error = eval(c, N, h, w_pointers[0], 1);
-        y_axis.push_back(error);
-        std::cout << error << std::endl;
-        x_axis.push_back(h);
-      }
-      plt::named_plot("error", x_axis, y_axis);
-      plt::title( " c: " + std::to_string(c) + " N: " + std::to_string(N));
-      plt::legend();
-      plt::show();
+      c = pow(10., n);
+    for (auto h : h_array)
+    {
+      double error = eval(c, N, h, w_pointers[0], 0);
+      y_axis.push_back(error);
+      std::cout << error << std::endl;
+      x_axis.push_back(h);
     }
+    }
+    plt::named_plot("error", x_axis, y_axis);
+    plt::title( " c: " + std::to_string(c) + " N: " + std::to_string(N));
+    plt::legend();
+    plt::show();
+    std::ofstream output_file;
+    output_file.open("./output/" + std::to_string(N));
+    for (int i = 0; i < x_axis.size(); ++i)
+      output_file << x_axis[i] << "," << y_axis[i] << "\n";
+    output_file.close();
+    x_axis.clear();
+    y_axis.clear();
   }
 
   return 0;

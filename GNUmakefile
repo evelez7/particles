@@ -7,7 +7,7 @@ PYTHON_DIR = /usr/include/python2.7
 # PYTHON_DIR =/usr/local/Frameworks/Python.framework/Versions/3.9/include/python3.9
 
 CXX=g++
-CXXFLAGS = -std=c++11
+CXXFLAGS = -std=c++11 -I${PYTHON_DIR} -I${MATPLOTLIB} -lpython2.7
 odir = ./o
 
 $(odir)/%.o:%.cpp GNUmakefile
