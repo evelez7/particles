@@ -29,13 +29,18 @@ double f_one(double x) {
 }
 
 double f_two(double x) {
-    // if (x == alpha) {
-        if (abs(x - 0.5) < 0.25) {
+        if (abs(x) < 0.25) {
             return 1.0;
         }
         return 0.0;
-    // }
-    // return val;
+}
+double f_gauss(double x) {
+        if (abs(x) < 0.25) {
+            double sigma = sqrt(pow(10, -3));
+            double val = 1.0/(sigma*sqrt(2*M_PI))*exp( -0.5*pow(x/sigma, 2) );
+            return val;
+        }
+        return 0.0;
 }
 
 void verify_vector_length(std::shared_ptr<std::vector<std::vector<int>>> i, int size) {
