@@ -13,6 +13,14 @@ double w_4(double);
 
 double w_6(double);
 
+double L4_4(double);
+
+double L4_2(double);
+
+double L2_2(double);
+
+double L2_1(double);
+
 double w(std::shared_ptr<std::vector<double>>, double, double (*)(double));
 
 double w(double, double, double (*)(double));
