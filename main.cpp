@@ -23,8 +23,8 @@ void graph(std::vector<double> const &, std::vector<double> const &, double (*)(
 // END forward declarations
 
 // global vars
-std::array<int, 7> N_array = {{16, 32, 64, 128, 256, 512, 1024}};
-double (*f_pointers[3])(double) = {f_one, f_two, f_gauss};
+std::array<int, 9> N_array = {{16, 32, 64, 128, 256, 512, 1024, 2048, 4096}};
+double (*f_pointers[4])(double) = {f_one, f_two, f_gauss, f_sin};
 double (*w_pointers[2])(double) = {w_2, w_4};
 int dimensions = 1;
 // END global vars
@@ -35,13 +35,21 @@ int main(int argc, char **argv)
   std::vector<double> x_axis, y_axis;
   std::ofstream output_file;
   output_file.open("1Derror.curve", std::ios::trunc);
+  int convPow = 4;
+  output_file << std::setprecision(16) << "# p=" + std::to_string(convPow) << "\n";
+  for (auto N : N_array)
+  {
+      double h = 1./static_cast<double>(N);
+      output_file << std::setprecision(16) << h << " " << 100.0*pow(h, convPow) << "\n";
+
+  } 
   for (int n = -10; n<0; ++n)
   {
     double c = pow(10., n);
     for (auto N : N_array)
     {
       double h = 1./static_cast<double>(N);
-      double error = eval(c, N, h, w_pointers[0], 2);
+      double error = eval(c, N, h, w_pointers[1], 3);
       y_axis.push_back(error);
       x_axis.push_back(h);
     }
@@ -116,9 +124,13 @@ double I_pg(int k, double h, double t, double (*w_script)(double), int N, int te
         {
             f_value = f_two(alpha);
         }
-        else
+        else if (test_case == 2)
         {
             f_value = f_gauss(alpha);
+        }
+        else 
+        {
+            f_value = f_sin(alpha);
         }
         sum += f_value * w_value;
     }

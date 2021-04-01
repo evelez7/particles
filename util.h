@@ -13,6 +13,7 @@ std::tuple<int, int> get_r_double(double (*)(double));
 double f_one(double);
 double f_two(double);
 double f_gauss(double);
+double f_sin(double);
 
 void test_w();
 

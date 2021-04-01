@@ -42,6 +42,11 @@ double f_gauss(double x) {
         }
         return 0.0;
 }
+double f_sin(double x) {
+    double wavenumber = 8.0; 
+    double val = sin(x/0.5*M_PI*wavenumber);
+    return val;
+}
 
 void verify_vector_length(std::shared_ptr<std::vector<std::vector<int>>> i, int size) {
     for (auto i_n : *i) {
