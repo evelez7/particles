@@ -106,9 +106,9 @@ double L2_1(double x)
   double abs_x = abs(x);
   double temp = 0;
   if (abs_x <= 1)
-    temp += 1. - ((5. / 2.) * pow(abs_x, 2.)) + ((3 / 2) * pow(abs_x, 3.));
+    temp += 1. - ((5. / (double) 2.) * pow(abs_x, 2.)) + ((3 / (double) 2) * pow(abs_x, 3.));
   else if (1 < abs(x) && abs(x) <= 2)
-    temp += 2 - (4 * (abs(x))) + ((5 / 2) * pow(abs_x, 2.)) - (pow(abs_x, 3.) / 2);
+    temp += 2 - (4 * (abs(x))) + ((5 / (double) 2) * pow(abs_x, 2.)) - (pow(abs_x, 3.) / (double) 2);
   return temp;
 }
 
@@ -117,9 +117,9 @@ double L2_2(double x)
   double abs_x = abs(x);
   double temp = 0;
   if (abs_x <= 1)
-    temp += 1 - pow(abs_x, 2.) - ((9 / 2) * pow(abs_x, 3.)) + ((15 / 2) * pow(abs_x, 4.)) - (3 * pow(abs_x, 5.));
+    temp += 1 - pow(abs_x, 2.) - ((9 / (double) 2) * pow(abs_x, 3.)) + ((15 / (double) 2) * pow(abs_x, 4.)) - (3 * pow(abs_x, 5.));
   else if (1 < abs_x && abs_x <= 2)
-    temp += -4 + (18 * abs(x)) - (29 * pow(abs_x, 2.)) + ((43 / 2) * pow(abs_x, 3.)) - ((15 / 2) * pow(abs_x, 4.)) + pow(abs_x, 5.);
+    temp += -4 + (18 * abs(x)) - (29 * pow(abs_x, 2.)) + ((43 / (double) 2) * pow(abs_x, 3.)) - ((15 / (double) 2) * pow(abs_x, 4.)) + pow(abs_x, 5.);
   return temp;
 }
 
@@ -128,11 +128,11 @@ double L4_2(double x)
   double abs_x = abs(x);
   double temp = 0;
   if (abs_x <= 1)
-    temp += 1 - ((5 / 4) * pow(abs_x, 2.)) - ((35 / 12) * pow(abs_x, 3.)) + ((21 / 4) * pow(abs_x, 4.)) - ((25 / 12) * pow(abs_x, 5.));
+    temp += 1 - ((5 / (double) 4) * pow(abs_x, 2.)) - ((35 / (double) 12) * pow(abs_x, 3.)) + ((21 / (double) 4) * pow(abs_x, 4.)) - ((25 / (double) 12) * pow(abs_x, 5.));
   else if (1 < abs_x && abs_x <= 2)
-    temp += -4 + ((75 / 4) * (abs(x))) - ((245 / 8) * pow(abs_x, 2.)) + ((545 / 24) * pow(abs_x, 3.)) - ((63 / 8) * pow(abs_x, 4.)) + ((25 / 24) * pow(abs_x, 5.));
+    temp += -4 + ((75 / (double) 4) * (abs(x))) - ((245 / (double) 8) * pow(abs_x, 2.)) + ((545 / (double) 24) * pow(abs_x, 3.)) - ((63 / (double) 8) * pow(abs_x, 4.)) + ((25 / (double) 24) * pow(abs_x, 5.));
   else if (2 < abs_x && abs_x <= 3)
-    temp += (18 - ((153 / 4) * (abs(x))) + ((255 / 8) * pow(abs_x, 2.)) - ((313 / 24) * pow(abs_x, 3.)) + ((21 / 8) * pow(abs_x, 4.)) - ((5 / 24) * pow(abs_x, 5.)));
+    temp += (18 - ((153 / (double) 4) * (abs(x))) + ((255 / (double) 8) * pow(abs_x, 2.)) - ((313 / (double) 24) * pow(abs_x, 3.)) + ((21 / (double) 8) * pow(abs_x, 4.)) - ((5 / (double) 24) * pow(abs_x, 5.)));
   return temp;
 }
 
@@ -141,10 +141,10 @@ double L4_4(double x)
   double abs_x = abs(x);
   double temp = 0;
   if (abs_x <= 1)
-    temp += (1 - ((5 / 4) * pow(abs_x, 2.)) + ((1 / 4) * pow(abs_x, 4.)) - ((100 / 3) * pow(abs_x, 5.)) + ((455 / 4) * pow(abs_x, 6.)) - ((295 / 2) * pow(abs_x, 7.)) + ((345 / 4) * pow(abs_x, 8.)) - ((115 / 6) * pow(abs_x, 9.)));
+    temp += (1 - ((5 / (double) 4) * pow(abs_x, 2.)) + ((1 / (double) 4) * pow(abs_x, 4.)) - ((100 / (double) 3) * pow(abs_x, 5.)) + ((455 / (double) 4) * pow(abs_x, 6.)) - ((295 / (double) 2) * pow(abs_x, 7.)) + ((345 / (double) 4) * pow(abs_x, 8.)) - ((115 / (double) 6) * pow(abs_x, 9.)));
   else if (1 < abs_x && abs_x <= 2)
-    temp += (-199 + ((5485 / 4) * (abs(x))) - ((32975 / 8) * pow(abs_x, 2.)) + ((28425 / 4) * pow(abs_x, 3.)) - ((61953 / 8) * pow(abs_x, 4.)) + ((33175 / 6) * pow(abs_x, 5.)) - ((20685 / 8) * pow(abs_x, 6.)) + ((3055 / 4) * pow(abs_x, 7.)) - ((1035 / 8) * pow(abs_x, 8.)) + ((115 / 12) * pow(abs_x, 9.)));
+    temp += (-199 + ((5485 / (double) 4) * (abs(x))) - ((32975 / (double) 8) * pow(abs_x, 2.)) + ((28425 / (double) 4) * pow(abs_x, 3.)) - ((61953 / (double) 8) * pow(abs_x, 4.)) + ((33175 / (double) 6) * pow(abs_x, 5.)) - ((20685 / (double) 8) * pow(abs_x, 6.)) + ((3055 / (double) 4) * pow(abs_x, 7.)) - ((1035 / (double) 8) * pow(abs_x, 8.)) + ((115 / (double) 12) * pow(abs_x, 9.)));
   else if (2 < abs_x && abs_x <= 3)
-    temp += (5913 - ((89235 / 4) * (abs(x))) + ((297585 / 8) * pow(abs_x, 2.)) - ((143895 / 4) * pow(abs_x, 3.)) + ((177871 / 8) * pow(abs_x, 4.)) - ((54641 / 6) * pow(abs_x, 5.)) + ((19775 / 8) * pow(abs_x, 6.)) - ((1715 / 4) * pow(abs_x, 7.)) + ((345 / 8) * pow(abs_x, 8.)) - ((23 / 12) * pow(abs_x, 9.)));
+    temp += (5913 - ((89235 / (double) 4) * (abs(x))) + ((297585 / (double) 8) * pow(abs_x, 2.)) - ((143895 / (double) 4) * pow(abs_x, 3.)) + ((177871 / (double) 8) * pow(abs_x, 4.)) - ((54641 / (double) 6) * pow(abs_x, 5.)) + ((19775 / (double) 8) * pow(abs_x, 6.)) - ((1715 / (double) 4) * pow(abs_x, 7.)) + ((345 / (double) 8) * pow(abs_x, 8.)) - ((23 / (double) 12) * pow(abs_x, 9.)));
   return temp;
 }

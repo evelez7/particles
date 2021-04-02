@@ -25,7 +25,7 @@ void graph(std::vector<double> const &, std::vector<double> const &, double (*)(
 // global vars
 std::array<int, 9> N_array = {{16, 32, 64, 128, 256, 512, 1024, 2048, 4096}};
 double (*f_pointers[4])(double) = {f_one, f_two, f_gauss, f_sin};
-double (*w_pointers[2])(double) = {w_2, w_4};
+double (*w_pointers[5])(double) = {w_2, w_4, L2_2, L4_2, L4_4};
 int dimensions = 1;
 // END global vars
 
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     for (auto N : N_array)
     {
       double h = 1./static_cast<double>(N);
-      double error = eval(c, N, h, w_pointers[1], 3);
+      double error = eval(c, N, h, w_pointers[4], 3);
       y_axis.push_back(error);
       x_axis.push_back(h);
     }
